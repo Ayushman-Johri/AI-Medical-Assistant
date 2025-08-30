@@ -199,25 +199,63 @@
 #         print(f"An error occurred while trying to play the audio: {e}")
 
 # #text_to_speech_with_elevenlabs(input_text, output_filepath="elevenlabs_testing_autoplay.mp3")
+# import os
+# from elevenlabs import ElevenLabs
+# from pydub import AudioSegment  # Yeh import zaroori hai
+
+# # API Key .env file se automatically load ho jayegi
+# ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
+
+# def text_to_speech_with_elevenlabs(input_text, output_filepath="audio_output"):
+#     """
+#     Generates speech from text using ElevenLabs, saves it as an MP3,
+#     converts it to WAV, and returns the path to the WAV file.
+#     """
+#     client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+    
+#     # File paths define karein
+#     mp3_path = f"{output_filepath}.mp3"
+#     wav_path = f"{output_filepath}.wav"
+
+#     # Step 1: ElevenLabs se MP3 generate karein
+#     with open(mp3_path, "wb") as f:
+#         response = client.text_to_speech.convert(
+#             voice_id="pNInz6obpgDQGcFmaJgB",
+#             model_id="eleven_multilingual_v2",
+#             output_format="mp3_44100_128",
+#             text=input_text
+#         )
+#         for chunk in response:
+#             f.write(chunk)
+    
+#     print(f"MP3 audio saved to: {mp3_path}")
+
+#     # Step 2: MP3 ko WAV mein convert karein
+#     try:
+#         audio = AudioSegment.from_mp3(mp3_path)
+#         audio.export(wav_path, format="wav")
+#         print(f"WAV audio saved to: {wav_path}")
+#     except Exception as e:
+#         print(f"Error converting MP3 to WAV: {e}")
+#         return None
+
+#     # Step 3: WAV file ka path return karein
+#     return wav_path
+# voice_of_doctor.py
 import os
 from elevenlabs import ElevenLabs
-from pydub import AudioSegment  # Yeh import zaroori hai
-
-# API Key .env file se automatically load ho jayegi
-ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
+from pydub import AudioSegment
 
 def text_to_speech_with_elevenlabs(input_text, output_filepath="audio_output"):
     """
     Generates speech from text using ElevenLabs, saves it as an MP3,
     converts it to WAV, and returns the path to the WAV file.
     """
-    client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+    client = ElevenLabs(api_key=os.environ.get("ELEVENLABS_API_KEY"))
     
-    # File paths define karein
     mp3_path = f"{output_filepath}.mp3"
     wav_path = f"{output_filepath}.wav"
 
-    # Step 1: ElevenLabs se MP3 generate karein
     with open(mp3_path, "wb") as f:
         response = client.text_to_speech.convert(
             voice_id="pNInz6obpgDQGcFmaJgB",
@@ -230,7 +268,6 @@ def text_to_speech_with_elevenlabs(input_text, output_filepath="audio_output"):
     
     print(f"MP3 audio saved to: {mp3_path}")
 
-    # Step 2: MP3 ko WAV mein convert karein
     try:
         audio = AudioSegment.from_mp3(mp3_path)
         audio.export(wav_path, format="wav")
@@ -239,5 +276,4 @@ def text_to_speech_with_elevenlabs(input_text, output_filepath="audio_output"):
         print(f"Error converting MP3 to WAV: {e}")
         return None
 
-    # Step 3: WAV file ka path return karein
     return wav_path

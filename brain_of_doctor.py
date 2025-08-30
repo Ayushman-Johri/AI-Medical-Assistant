@@ -3,31 +3,70 @@
 # load_dotenv()
 
 #Step1: Setup GROQ API key
+# import os
+
+# GROQ_API_KEY=os.environ.get("GROQ_API_KEY")
+
+# #Step2: Convert image to required format
+# import base64
+
+
+# image_path="Acne image.jpg"
+
+# def encode_image(image_path):   
+#     image_file=open(image_path, "rb")
+#     return base64.b64encode(image_file.read()).decode('utf-8')
+
+# #Step3: Setup Multimodal LLM 
+# from groq import Groq
+
+# query="Is there something wrong with my face?"
+# #model = "meta-llama/llama-4-maverick-17b-128e-instruct"
+# model="meta-llama/llama-4-scout-17b-16e-instruct"
+# #model = "meta-llama/llama-4-scout-17b-16e-instruct"
+# #model="llama-3.2-90b-vision-preview" #Deprecated
+
+# def analyze_image_with_query(query, model, encoded_image):
+#     client=Groq()  
+#     messages=[
+#         {
+#             "role": "user",
+#             "content": [
+#                 {
+#                     "type": "text", 
+#                     "text": query
+#                 },
+#                 {
+#                     "type": "image_url",
+#                     "image_url": {
+#                         "url": f"data:image/jpeg;base64,{encoded_image}",
+#                     },
+#                 },
+#             ],
+#         }]
+#     chat_completion=client.chat.completions.create(
+#         messages=messages,
+#         model=model
+#     )
+
+#     return chat_completion.choices[0].message.content
+# encoded_img = encode_image(image_path)
+
+# # ✅ Call function with encoded image
+# a = analyze_image_with_query(query, model, encoded_img)
+# print(a)
+# brain_of_doctor.py
 import os
-
-GROQ_API_KEY=os.environ.get("GROQ_API_KEY")
-
-#Step2: Convert image to required format
 import base64
-
-
-image_path="Acne image.jpg"
-
-def encode_image(image_path):   
-    image_file=open(image_path, "rb")
-    return base64.b64encode(image_file.read()).decode('utf-8')
-
-#Step3: Setup Multimodal LLM 
 from groq import Groq
 
-query="Is there something wrong with my face?"
-#model = "meta-llama/llama-4-maverick-17b-128e-instruct"
-model="meta-llama/llama-4-scout-17b-16e-instruct"
-#model = "meta-llama/llama-4-scout-17b-16e-instruct"
-#model="llama-3.2-90b-vision-preview" #Deprecated
+def encode_image(image_path):   
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
 def analyze_image_with_query(query, model, encoded_image):
-    client=Groq()  
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    
     messages=[
         {
             "role": "user",
@@ -44,15 +83,11 @@ def analyze_image_with_query(query, model, encoded_image):
                 },
             ],
         }]
+    
     chat_completion=client.chat.completions.create(
         messages=messages,
         model=model
     )
 
     return chat_completion.choices[0].message.content
-encoded_img = encode_image(image_path)
-
-# ✅ Call function with encoded image
-a = analyze_image_with_query(query, model, encoded_img)
-print(a)
 
