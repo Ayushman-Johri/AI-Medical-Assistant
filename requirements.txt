@@ -1,5 +1,5 @@
 gradio
-groq
+groq>=0.31.0
 speechrecognition
 pydub
-elevenlabs
+elevenlabs>=1.3.0
